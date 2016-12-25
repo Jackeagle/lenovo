@@ -1,0 +1,29 @@
+<appops-policy version="1">
+<white-app>
+  <perms name="all" pkg="android.camera.cts"/>
+  <perms name="all" pkg="com.android.cts.deviceandprofileowner"/>
+  <perms name="all" pkg="android.gesture.cts"/>
+  <perms name="all" pkg="android.media.cts"/>
+  <perms name="all" pkg="android.location.cts"/>
+  <perms name="all" pkg="android.location2.cts"/>
+  <perms name="all" pkg="android.provider.cts"/>
+  <perms name="all" pkg="android.managedprofile.cts"/>
+  <perms name="all" pkg="android.app.stub.cts"/>
+  <perms name="all" pkg="android.graphics2.cts"/>
+  <perms name="all" pkg="android.webkit.cts"/>
+  <perms name="all" pkg="android.telephony.cts"/>
+  <perms name="all" pkg="android.hardware.cts"/>
+  <perms name="all" pkg="android.mediastress.cts"/>
+  <perms name="all" pkg="android.net.cts"/>
+  <perms name="all" pkg="android.permission.cts"/>
+  <perms name="all" pkg="android.permission2.cts"/>
+  <perms name="all" pkg="android.accessibilityservice.cts"/>
+  <perms name="all" pkg="android.verifier.cts"/>
+  <perms name="all" pkg="android.robot.cts"/>
+  <perms name="all" pkg="android.telecom.cts"/>
+  <perms name="all" pkg="android.bluetooth.cts"/>
+  <perms name="all" pkg="android.video.cts"/>
+  <perms name="all" pkg="com.android.cts.splitapp"/>
+  <perms name="all" pkg="com.android.cts.numberblocking.hostside"/>
+</white-app>
+</appops-policy>

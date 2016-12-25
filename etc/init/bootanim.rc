@@ -1,0 +1,8 @@
+## shenqi-framework, houlx1, Charging of power off, XUICR-66, begin
+service bootanim /system/bin/bootanimation
+    class main
+    user root
+    group graphics
+    disabled
+    oneshot
+## shenqi-framework, houlx1, Charging of power off, XUICR-66, end
