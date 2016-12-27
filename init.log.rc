@@ -1,0 +1,127 @@
+on init
+    symlink /data/local /local
+
+on post-fs-data
+    # add aplog dir
+    mkdir /data/local 0751 system system
+    mkdir /data/local/newlog 0771 system system
+    mkdir /data/local/newlog/aplog 0777 system system
+    mkdir /data/local/newlog/aplog/logcats 0777 system system
+    mkdir /data/local/newlog/aplog/bluetooth 0777 system system
+    mkdir /data/local/newlog/aplog/tcps 0777 system system
+
+on property:persist.sys.dloadmode.config=1
+    write /sys/module/qpnp_power_on/parameters/emergent_restart 1
+    write /sys/module/msm_poweroff/parameters/download_mode 1
+    setprop persist.sys.ssr.restart_level 1
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level system
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level system
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level system
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level system
+    write /sys/bus/msm_subsys/devices/subsys4/restart_level system
+    write /sys/bus/msm_subsys/devices/subsys5/restart_level system
+
+on property:persist.sys.dloadmode.config=0
+    write /sys/module/qpnp_power_on/parameters/emergent_restart 0
+    write /sys/module/msm_poweroff/parameters/download_mode 0
+    setprop persist.sys.ssr.restart_level 3
+    write /sys/bus/msm_subsys/devices/subsys0/restart_level related
+    write /sys/bus/msm_subsys/devices/subsys1/restart_level related
+    write /sys/bus/msm_subsys/devices/subsys2/restart_level related
+    write /sys/bus/msm_subsys/devices/subsys3/restart_level related
+    write /sys/bus/msm_subsys/devices/subsys4/restart_level related
+    write /sys/bus/msm_subsys/devices/subsys5/restart_level related
+
+#add for aplog service
+service mainlog /system/bin/logcat -r 4096 -n 20 -v threadtime -f /local/newlog/aplog/logcats/logcat
+    class main
+    user system
+    group system root log
+    disabled
+    oneshot
+
+# add for record more logcat info
+service mainlog_big /system/bin/logcat -r 4096 -n 1000 -v threadtime -f /local/newlog/aplog/logcats/logcat
+    class main
+    user system
+    group system root log
+    disabled
+    oneshot
+
+service radiolog /system/bin/logcat -r 2048 -b radio -n 8 -v time -f /local/newlog/aplog/logcats/radio "AT:S *:V"
+    class main
+    user system
+    group system root log
+    disabled
+    oneshot
+
+# add for record more logcat info
+service radiolog_big /system/bin/logcat -r 2048 -b radio -n 1000 -v time -f /local/newlog/aplog/logcats/radio "AT:S *:V"
+    class main
+    user system
+    group system root log
+    disabled
+    oneshot
+
+service dmesglog /system/bin/sh /system/bin/dmesglog.sh
+    class main
+    disabled
+    oneshot
+
+service batterylog /system/bin/sh /system/bin/batterylogcontrol.sh
+    class main
+    disabled
+    oneshot
+
+service custom-setup /system/bin/sh /system/bin/aplog.sh
+    class late_start
+    oneshot
+
+service copyaplog /system/bin/sh /system/bin/copy_aplog.sh
+    class main
+    disabled
+    oneshot
+
+service cleanaplog /system/bin/sh /system/bin/clean_aplog.sh
+    class main
+    disabled
+    oneshot
+
+# Add by wangwq14 for stop all log services, remove *.enable and old logs.
+service stopaplog /system/bin/sh /system/bin/stop_aplog.sh
+    class main
+    disabled
+    oneshot
+
+# Add by wangwq14 for catch current log service
+service catchaplog /system/bin/sh /system/bin/catch_aplog.sh
+    class main
+    disabled
+    oneshot
+
+# Add by wangwq14
+service assalog /system/bin/sh /system/bin/auto_save_stop_aplog.sh
+    class main
+    disabled
+    oneshot
+
+#add for aplog service
+service tcplog /system/xbin/tcpdump -s 1500 -w /local/newlog/aplog/tcps/tcp -C 20 -W 2 -Z root -i any host not ::1 and host not ::ffff:127.0.0.1 and host not 127.0.0.1
+    class main
+    disabled
+    oneshot
+
+service startmdmlog /system/bin/qxdmlog.sh start
+    class main
+    disabled
+    oneshot
+
+service stopmdmlog /system/bin/qxdmlog.sh
+    class main
+    disabled
+    oneshot
+
+service domdmlog /system/bin/domdmlog.sh
+    class late_start
+    oneshot
+
